@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Evergreen - Half A4 Invoice (Side-by-Side)</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Scaled for Half A4 (A5 Landscape: 210mm x 148mm) */
+        .document-container {
+            background-color: #ffffff;
+            width: 210mm; 
+            min-height: 148mm;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 15px 25px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Top Section: Left to Right Layout */
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #004d00;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* LEFT SIDE: Hotel Info */
+        .hotel-info {
+            width: 48%;
+            text-align: left;
+        }
+
+        .hotel-info h1 {
+            margin: 0 0 5px 0;
+            font-family: 'Georgia', serif;
+            font-size: 26px;
+            color: #004d00;
+            letter-spacing: 1px;
+        }
+
+        .hotel-info p {
+            margin: 2px 0;
+            color: #444;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        /* RIGHT SIDE: Guest Info */
+        .guest-info {
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .info-row label {
+            width: 75px;
+            text-align: right;
+            margin-right: 8px;
+            color: #004d00;
+        }
+
+        .info-row input {
+            flex-grow: 1;
+            border: none;
+            border-bottom: 1px dashed #999;
+            padding: 2px 4px;
+            font-size: 12px;
+            font-family: inherit;
+            color: #000;
+            background: transparent;
+            outline: none;
+        }
+
+        /* Title */
+        .invoice-title {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #004d00;
+            color: #fff;
+            padding: 4px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            font-size: 11px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f5f0;
+            color: #004d00;
+            font-weight: bold;
+        }
+
+        th:nth-child(2), td:nth-child(2),
+        th:nth-child(3), td:nth-child(3),
+        th:nth-child(4), td:nth-child(4) {
+            text-align: center;
+        }
+
+        /* Totals Section */
+        .totals-container {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .totals-box {
+            width: 200px;
+            border-bottom: 2px double #004d00;
+            padding: 5px 0;
+        }
+
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: bold;
+            color: #004d00;
+        }
+
+        /* Footer / Signatures */
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .sig-line {
+            width: 150px;
+            border-top: 1px solid #000;
+            text-align: center;
+            padding-top: 4px;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        /* Input Controls (Hidden when printing) */
+        .controls {
+            margin-top: 40px;
+            background-color: #f1f1f1;
+            padding: 15px;
+            border: 1px dashed #888;
+            border-radius: 5px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .controls input {
+            padding: 8px;
+            font-size: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .controls input.desc { flex: 2; min-width: 150px; }
+        .controls input.num { flex: 1; min-width: 60px; }
+
+        .btn {
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        .btn-add { background-color: #004d00; }
+        .btn-print { background-color: #d4af37; color: #000; width: 100%; margin-top: 10px; }
+        .btn-delete { background-color: #dc3545; padding: 4px 8px; font-size: 10px; }
+
+        /* Print Settings */
+        @media print {
+            @page { 
+                size: A5 landscape; /* Forces Half-A4 Left-to-Right layout */
+                margin: 5mm; 
+            }
+            body { background-color: #fff; padding: 0; display: block; }
+            .document-container { box-shadow: none; padding: 0; width: 100%; }
+            .no-print { display: none !important; }
+            .info-row input { border-bottom: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        
+        <!-- Top Section: Left (Hotel) to Right (Guest) -->
+        <div class="top-section">
+            
+            <!-- LEFT: Hotel Info -->
+            <div class="hotel-info">
+                <h1>HOTEL EVERGREEN</h1>
+                <p>📍 Near Petrol Pump, Tanki Bazar Main Road</p>
+                <p>Valmiki Nagar, West Champaran, Bihar 845107</p>
+                <p>📞 +91 77829 35050</p>
+                <p>🌐 hotelevergreen.in</p>
+            </div>
+
+            <!-- RIGHT: Guest Info -->
+            <div class="guest-info">
+                <div class="info-row"><label>Guest:</label> <input type="text" placeholder="Guest Name"></div>
+                <div class="info-row"><label>Invoice:</label> <input type="text" placeholder="EVG-1001"></div>
+                <div class="info-row"><label>Room No:</label> <input type="text" placeholder="204"></div>
+                <div class="info-row"><label>Check-In:</label> <input type="text" placeholder="DD/MM/YYYY"></div>
+                <div class="info-row"><label>Check-Out:</label> <input type="text" placeholder="DD/MM/YYYY"></div>
+            </div>
+
+        </div>
+
+        <div class="invoice-title">GUEST FOLIO / RECEIPT</div>
+
+        <!-- Billing Table -->
+        <table id="billTable">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th style="width: 15%;">Rate (₹)</th>
+                    <th style="width: 10%;">Qty</th>
+                    <th style="width: 20%;">Amount (₹)</th>
+                    <th class="no-print" style="width: 30px;">X</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Items will be added here -->
+            </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="totals-container">
+            <div class="totals-box">
+                <div class="totals-row">
+                    <span>GRAND TOTAL:</span>
+                    <span>₹ <span id="grandTotal">0.00</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signatures -->
+        <div class="signatures">
+            <div class="sig-line">Guest Signature</div>
+            <div class="sig-line">Manager Signature</div>
+        </div>
+
+        <!-- Controls to Add Items (Hidden on Print) -->
+        <div class="controls no-print">
+            <h4 style="width: 100%; margin-top: 0; margin-bottom: 5px;">Add Item to Bill</h4>
+            <input type="text" id="itemDesc" class="desc" placeholder="Desc. (e.g., AC Room)">
+            <input type="number" id="itemRate" class="num" placeholder="Rate">
+            <input type="number" id="itemQty" class="num" placeholder="Qty/Days">
+            <button class="btn btn-add" onclick="addItem()">+ Add</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ Print Bill</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function addItem() {
+            let desc = document.getElementById("itemDesc").value;
+            let rate = parseFloat(document.getElementById("itemRate").value);
+            let qty = parseFloat(document.getElementById("itemQty").value);
+
+            if (desc.trim() === "" || isNaN(rate) || isNaN(qty)) {
+                alert("Please enter a Description, Rate, and Quantity.");
+                return;
+            }
+
+            let amount = rate * qty;
+            let table = document.getElementById("tableBody");
+            let newRow = table.insertRow();
+
+            newRow.innerHTML = `
+                <td>${desc}</td>
+                <td>${rate.toFixed(2)}</td>
+                <td>${qty}</td>
+                <td class="row-amount">${amount.toFixed(2)}</td>
+                <td class="no-print"><button class="btn btn-delete" onclick="deleteRow(this)">X</button></td>
+            `;
+
+            document.getElementById("itemDesc").value = "";
+            document.getElementById("itemRate").value = "";
+            document.getElementById("itemQty").value = "";
+
+            updateTotal();
+        }
+
+        function deleteRow(btn) {
+            let row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let amounts = document.getElementsByClassName("row-amount");
+            let total = 0;
+            
+            for (let i = 0; i < amounts.length; i++) {
+                total += parseFloat(amounts[i].innerText);
+            }
+            
+            document.getElementById("grandTotal").innerText = total.toFixed(2);
+        }
+    </script>
+</body>
+</html>

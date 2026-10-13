@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahaveer Events - Inventory List</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .document-container {
+            background-color: #fcfbf8;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 2px solid #e0d8c3;
+            padding-bottom: 40px;
+        }
+
+        /* Header Styling */
+        .header {
+            background-color: #4a0000; /* Dark Red */
+            color: #d4af37; /* Gold */
+            text-align: center;
+            padding: 25px 10px;
+            border-bottom: 5px solid #d4af37;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-family: 'Georgia', serif;
+            font-size: 36px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header h2 {
+            margin: 10px 0 0 0;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        /* Contact Bar */
+        .contact-bar {
+            text-align: center;
+            font-size: 13px;
+            color: #333;
+            padding: 15px 10px;
+            border-bottom: 1px solid #d4af37;
+            background-color: #fff;
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .section-title span {
+            display: inline-block;
+            border: 2px solid #4a0000;
+            color: #4a0000;
+            font-weight: bold;
+            font-size: 20px;
+            padding: 10px 30px;
+            background-color: #fdfaf3;
+            border-radius: 5px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 90%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #fff;
+        }
+
+        th, td {
+            border: 1px solid #d4af37;
+            padding: 12px 15px;
+            font-size: 16px;
+        }
+
+        th {
+            background: linear-gradient(to bottom, #c5a059, #8b6914);
+            color: #fff;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        th:nth-child(3), td:nth-child(3) {
+            text-align: center;
+            width: 120px;
+        }
+
+        td {
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* Input Controls (Hidden when printing) */
+        .controls {
+            width: 90%;
+            margin: 30px auto 0 auto;
+            background-color: #fff;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .controls input {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .controls input.cat { flex: 1; min-width: 150px; }
+        .controls input.name { flex: 2; min-width: 200px; }
+        .controls input.qty { flex: 1; min-width: 80px; }
+
+        .btn {
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        .btn-add { background-color: #28a745; }
+        .btn-print { background-color: #007bff; }
+        .btn-delete { background-color: #dc3545; padding: 5px 10px; font-size: 12px; }
+
+        /* Print Settings */
+        @media print {
+            body { background-color: #fff; padding: 0; }
+            .document-container { border: none; box-shadow: none; max-width: 100%; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="document-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>MAHAVEER EVENTS</h1>
+            <h2>TENT HOUSE & EVENT MANAGEMENT</h2>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="contact-bar">
+            📍 bagaha-01 Tiwari Tola, Bagaha, Bihar 845101 &nbsp;|&nbsp; 
+            📞 +91 80025 97415 &nbsp;|&nbsp; 
+            ✉️ ritesh30101991@gmail.com
+        </div>
+
+        <!-- Title -->
+        <div class="section-title">
+            <span>EVENT INVENTORY & REQUIREMENTS</span>
+        </div>
+
+        <!-- Inventory Table -->
+        <table id="inventoryTable">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Item Description</th>
+                    <th>Quantity</th>
+                    <th class="no-print" style="width: 80px; text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Preloaded items -->
+                <tr><td>Furniture</td><td>20/30 Stage</td><td>1</td><td class="no-print" style="text-align: center;"><button class="btn btn-delete" onclick="deleteRow(this)">X</button></td></tr>
+                <tr><td>Furniture</td><td>VIP Chairs</td><td>100</td><td class="no-print" style="text-align: center;"><button class="btn btn-delete" onclick="deleteRow(this)">X</button></td></tr>
+                <tr><td>Flowers</td><td>Stage Decoration</td><td>1 Setup</td><td class="no-print" style="text-align: center;"><button class="btn btn-delete" onclick="deleteRow(this)">X</button></td></tr>
+                <tr><td>Electronics</td><td>Standard Lighting</td><td>1 Setup</td><td class="no-print" style="text-align: center;"><button class="btn btn-delete" onclick="deleteRow(this)">X</button></td></tr>
+            </tbody>
+        </table>
+
+        <!-- Controls to Add Items -->
+        <div class="controls no-print">
+            <input type="text" id="itemCat" class="cat" placeholder="Category (e.g., Flowers)">
+            <input type="text" id="itemName" class="name" placeholder="Item Name (e.g., Entrance Gate)">
+            <input type="text" id="itemQty" class="qty" placeholder="Qty (e.g., 1)">
+            <button class="btn btn-add" onclick="addItem()">+ Add Item</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ Print / Save PDF</button>
+        </div>
+    </div>
+
+    <!-- JavaScript to handle adding and deleting rows -->
+    <script>
+        function addItem() {
+            // Get values from inputs
+            let cat = document.getElementById("itemCat").value;
+            let name = document.getElementById("itemName").value;
+            let qty = document.getElementById("itemQty").value;
+
+            // Make sure fields aren't empty
+            if(name.trim() === "" || qty.trim() === "") {
+                alert("Please enter at least an Item Name and Quantity.");
+                return;
+            }
+
+            // If category is left blank, assign a default
+            if(cat.trim() === "") {
+                cat = "General";
+            }
+
+            // Find the table body
+            let table = document.getElementById("tableBody");
+
+            // Create a new row
+            let newRow = table.insertRow();
+
+            // Insert cells
+            let cell1 = newRow.insertCell(0);
+            let cell2 = newRow.insertCell(1);
+            let cell3 = newRow.insertCell(2);
+            let cell4 = newRow.insertCell(3);
+
+            // Add the text to the cells
+            cell1.innerHTML = cat;
+            cell2.innerHTML = name;
+            cell3.innerHTML = qty;
+            
+            // Add the delete button to the fourth cell
+            cell4.className = "no-print";
+            cell4.style.textAlign = "center";
+            cell4.innerHTML = '<button class="btn btn-delete" onclick="deleteRow(this)">X</button>';
+
+            // Clear the input boxes for the next item
+            document.getElementById("itemCat").value = "";
+            document.getElementById("itemName").value = "";
+            document.getElementById("itemQty").value = "";
+        }
+
+        function deleteRow(btn) {
+            // Find the row the button is in and delete it
+            let row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+    </script>
+</body>
+</html>
